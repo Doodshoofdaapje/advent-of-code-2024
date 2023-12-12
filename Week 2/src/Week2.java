@@ -42,18 +42,56 @@ public class Week2 {
         return new Game(gameId, subsets);
     }
 
+    public static Integer checkGame(Game game, Map<String, Integer> config) {
+        Integer returnValue = game.id;
+        for (Map<String, Integer> subset : game.subsets) {
+            for (Map.Entry<String, Integer> entry : subset.entrySet()) {
+                if (entry.getValue() > config.get(entry.getKey())) {
+                    returnValue = 0;
+                }
+            }
+        }
+        return returnValue;
+    }
+
+    public static Integer powerOfSubset(Game game) {
+        Map<String, Integer> maxMap = new HashMap<>();
+        maxMap.put("red", 0);
+        maxMap.put("green", 0);
+        maxMap.put("blue", 0);
+
+        for (Map<String, Integer> subset : game.subsets) {
+            for (Map.Entry<String, Integer> entry : subset.entrySet()) {
+                if (entry.getValue() > maxMap.get(entry.getKey())) {
+                    maxMap.put(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+        Integer power = maxMap.get("red") * maxMap.get("green") * maxMap.get("blue");
+        return power;
+    }
+
     public static void main(String args[])  //static method  
     {  
         try {
-            URL path = Week1.class.getResource("TestInput.txt");
+            URL path = Week1.class.getResource("Input.txt");
             File inputFile = new File(path.getFile());
             Scanner reader = new Scanner(inputFile);
 
-            List<Game> games = new ArrayList<>();
+            Map<String, Integer> configuration = new HashMap<>();
+            configuration.put("red", 12);
+            configuration.put("green", 13);
+            configuration.put("blue", 14);
+
+            Integer idSum = 0;
+            Integer powerSum = 0;
             while (reader.hasNextLine()) {
                 Game game = parseLine(reader.nextLine());
-                games.add(game);
+                idSum += checkGame(game, configuration);
+                powerSum += powerOfSubset(game);
             }
+            System.out.println(String.format("Id sum for valid games = %d", idSum));
+            System.out.println(String.format("Power sum for minimum games = %d", powerSum));
 
             reader.close();
         } catch (FileNotFoundException e) {
