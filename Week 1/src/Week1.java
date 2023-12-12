@@ -2,72 +2,70 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.Map.Entry;
 
 class Week1{
 
-    public static String preProcess(String data) {
-        // Replacement dictionary 
-        Map<String, String> replacementDict = new HashMap<>();
-        replacementDict.put("one", "1");
-        replacementDict.put("two", "2");
-        replacementDict.put("three", "3");
-        replacementDict.put("four", "4");
-        replacementDict.put("five", "5");
-        replacementDict.put("six", "6");
-        replacementDict.put("seven", "7");
-        replacementDict.put("eight", "8");
-        replacementDict.put("nine", "9");
+    public static Map<Integer, Integer> wordsToInteger(Map<Integer, Integer> list, String data) {
+        Map<Integer, Integer> hitList = list;
 
-        String processedString = data;
-        while (processedString != replaceFirstWord(processedString, replacementDict)) {
-            processedString = replaceFirstWord(processedString, replacementDict);
+        // Replacement dictionary 
+        Map<String, Integer> replacementDict = new HashMap<>();
+        replacementDict.put("zero", 0);
+        replacementDict.put("one", 1);
+        replacementDict.put("two", 2);
+        replacementDict.put("three", 3);
+        replacementDict.put("four", 4);
+        replacementDict.put("five", 5);
+        replacementDict.put("six", 6);
+        replacementDict.put("seven", 7);
+        replacementDict.put("eight", 8);
+        replacementDict.put("nine", 9);
+
+        for (Map.Entry<String, Integer> entry : replacementDict.entrySet()) {
+            int index = data.indexOf(entry.getKey());
+            while (index >= 0) {
+                hitList.put(index, entry.getValue());
+                index = data.indexOf(entry.getKey(), index + 1);
+            }
         }
 
-        return processedString;
+        return hitList;
     }
 
-    public static String replaceFirstWord(String data, Map<String, String> replacements) {
-        // Sort keys based on occurence in original string
-        List<String> keys = new ArrayList<>(replacements.keySet());
-        List<String> indexedKeys = getIndexesOfKeys(data, keys);
-
-        String processedString = data;
-        if (indexedKeys.size() > 0) {
-            indexedKeys.sort(Comparator.comparingInt(data::indexOf));
-            String firstKey = indexedKeys.get(0);
-            processedString = data.replaceFirst(firstKey, replacements.get(firstKey));
+    public static Map<Integer, Integer> digitToInteger(String data) {
+        Map<Integer, Integer> hitList = new HashMap<>();
+        for (int i = 0; i < data.length(); i++) {
+            char c = data.charAt(i);
+            if (c >= '0' && c <= '9') {
+                hitList.put(i, c - '0');
+            }
         }
-        
-        return processedString;
+        return hitList;
     }
 
     public static Integer getCalibrationValue(String data) {
-        String preProcessedString = preProcess(data);
-        String filteredString = preProcessedString.replaceAll("([a-z])", "");
-        String outputAsString = "" + filteredString.charAt(0) + filteredString.charAt(filteredString.length() - 1);
-        Integer returnValue = Integer.parseInt(outputAsString);
-        return returnValue;
+        System.out.println(data);
+        Map<Integer, Integer> hitList = digitToInteger(data);
+        hitList = wordsToInteger(hitList, data);
+        List<Integer> keys = new ArrayList<>(hitList.keySet());
+        Collections.sort(keys);
+        String returnValue = "" + hitList.get(keys.get(0)) + hitList.get(keys.get(keys.size() - 1));
+        System.out.println(returnValue);
+        return Integer.parseInt(returnValue);
     } 
-
-    public static List<String> getIndexesOfKeys(String data, List<String> keys) {
-        List<String> filteredKeys = new ArrayList<>();
-        for (String key : keys) {
-            if (data.indexOf(key) >= 0) {
-                filteredKeys.add(key);
-            }
-        }
-        return filteredKeys;
-    }
 
     public static void main(String args[])  //static method  
     {  
         try {
-            URL path = Week1.class.getResource("TestInput.txt");
+            URL path = Week1.class.getResource("Input.txt");
             File inputFile = new File(path.getFile());
             Scanner reader = new Scanner(inputFile);
             Integer calibrationSum = 0;
