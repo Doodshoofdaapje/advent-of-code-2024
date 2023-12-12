@@ -1,10 +1,10 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -67,7 +67,8 @@ class Week1{
     public static void main(String args[])  //static method  
     {  
         try {
-            File inputFile = new File("Input.txt");
+            URL path = Week1.class.getResource("TestInput.txt");
+            File inputFile = new File(path.getFile());
             Scanner reader = new Scanner(inputFile);
             Integer calibrationSum = 0;
 
@@ -75,6 +76,7 @@ class Week1{
                 String data = reader.nextLine();
                 calibrationSum += getCalibrationValue(data);
             }
+
             String outputString = String.format("Total calibration sum is %d", calibrationSum);
             System.out.println(outputString);
 
