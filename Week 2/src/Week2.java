@@ -74,7 +74,7 @@ public class Week2 {
     public static void main(String args[])  //static method  
     {  
         try {
-            URL path = Week1.class.getResource("Input.txt");
+            URL path = Week2.class.getResource("Input.txt");
             File inputFile = new File(path.getFile());
             Scanner reader = new Scanner(inputFile);
 
