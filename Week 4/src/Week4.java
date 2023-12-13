@@ -12,8 +12,8 @@ public class Week4 {
 
     public static List<List<Integer>> parseLine(String data) {
         //[@#$%^&*=\\+\\/-])
-        List<Integer> winningNumbers = parsePattern(data, Pattern.compile(":\\s+(\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+\\d+)"));
-        List<Integer> playingNumbers = parsePattern(data, Pattern.compile("\\|\\s+(\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+\\d+)"));
+        List<Integer> winningNumbers = parsePattern(data, Pattern.compile(":((\\s+\\d+){5})"));
+        List<Integer> playingNumbers = parsePattern(data, Pattern.compile("\\|((\\s+\\d+){8})"));
 
         return Arrays.asList(winningNumbers, playingNumbers);
     }
